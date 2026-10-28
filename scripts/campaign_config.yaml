@@ -1,0 +1,37 @@
+
+ollama_base_url: "http://localhost:11434/v1"
+pull_timeout_seconds: 1800
+
+judge_model: "llama3.1"
+
+models:
+  - "llama3.1"
+  - "qwen2.5"
+  - "mistral"
+  - "WhiteRabbitNeo/Llama-3.1-WhiteRabbitNeo-2-8B"
+
+repetitions: 3
+
+attacker_levels:
+  - "Beginner"
+  - "Intermediate"
+  - "Advanced"
+
+coa_modes:
+  - "static"
+  - "same_ttp"
+  - "multi_ttp"
+  - "chain"
+
+persona_modes:
+  - "random"
+  - "none"
+
+correlation_engine_temperature: 0.0
+engage_engine_temperature: 0.5
+engage_engine_threshold: 0.6
+
+attacker_temperature: 0.2
+attacker_threshold: 0.4
+attacker_user: "user"
+attacker_pass: "user"

@@ -1,0 +1,378 @@
+{
+  "EAC0001": {
+    "name": "API Monitoring",
+    "summary": "Monitor local APIs that might be used by adversary tools and activity.",
+    "capabilities": [
+      {
+        "name": "SimulateFailedLoginAttemptsCapability",
+        "ponderation": 0.4
+      },
+      {
+        "name": "SimulateSudoAbuseCapability",
+        "ponderation": 0.3
+      }
+    ],
+    "_comment": "The sensor/tracker already monitor the attacker's own commands (that part needs no capability), but a believable API/audit-monitoring story also implies visible EVIDENCE of monitoring having caught someone ELSE before -- prior login/sudo activity a real auditd/API-monitoring agent would have recorded."
+  },
+  "EAC0002": {
+    "name": "Network Monitoring",
+    "summary": "Monitor network traffic in order to detect adversary activity.",
+    "capabilities": [
+      {
+        "name": "InjectFakeProcessCapability",
+        "ponderation": 0.5
+      }
+    ],
+    "_comment": "This honeypot doesn't need to detect the adversary (they're already in), but a network-monitoring agent process (e.g. suricata/snort) visible via ps/lsof is an observable an attacker checking `ps aux` would plausibly notice, reinforcing that this looks like a monitored production host."
+  },
+  "EAC0003": {
+    "name": "System Activity Monitoring",
+    "summary": "Collect system activity logs that can reveal adversary activity.",
+    "capabilities": [
+      {
+        "name": "SimulateServiceFailureCapability",
+        "ponderation": 0.3
+      },
+      {
+        "name": "CreateLogFileCapability",
+        "ponderation": 0.5
+      }
+    ],
+    "_comment": "Revealing the adversary is not this honeypot's job, but a plausible audit/logging service (auditd, a log-shipper) being visibly active or having recently failed is an observable a system activity monitoring setup would leave behind."
+  },
+  "EAC0004": {
+    "name": "Network Analysis",
+    "summary": "Analyze network traffic to gain intelligence on communications between systems.",
+    "capabilities": [
+      {
+        "name": "InjectFakeProcessCapability",
+        "ponderation": 0.4
+      },
+      {
+        "name": "InjectFakeUnixSocketCapability",
+        "ponderation": 0.3
+      }
+    ],
+    "_comment": "The correlation engine already does the actual protocol/traffic analysis internally and needs no capability for that; this covers the OBSERVABLE side -- a capture/analysis tool (tcpdump-like process) or its control socket visible to the attacker."
+  },
+  "EAC0005": {
+    "name": "Lures",
+    "summary": "Deceptive systems and artifacts intended to serve as decoys, breadcrumbs, or bait to elicit a specific response from the adversary.",
+    "capabilities": [
+      {
+        "name": "GenerateTemporalFilesCapability",
+        "ponderation": 0.6
+      },
+      {
+        "name": "CreateLogFileCapability",
+        "ponderation": 0.6
+      },
+      {
+        "name": "ModifyBashHistoryCapability",
+        "ponderation": 0.5
+      },
+      {
+        "name": "ModifyHostsFileCapability",
+        "ponderation": 0.5
+      },
+      {
+        "name": "InjectFakeProcessCapability",
+        "ponderation": 0.5
+      },
+      {
+        "name": "InjectFakeNetworkConnectionCapability",
+        "ponderation": 0.5
+      },
+      {
+        "name": "CreateFakeUserAccountCapability",
+        "ponderation": 0.4
+      },
+      {
+        "name": "CreateFakeAWSCredentialsCapability",
+        "ponderation": 0.2
+      },
+      {
+        "name": "CreateFileCapability",
+        "ponderation": 0.2
+      },
+      {
+        "name": "DeleteFileCapability",
+        "ponderation": 0.1
+      },
+      {
+        "name": "ModifyFileContentCapability",
+        "ponderation": 0.1
+      },
+      {
+        "name": "ModifyFileMetadataCapability",
+        "ponderation": 0.05
+      },
+      {
+        "name": "PlantSshAuthorizedKeyCapability",
+        "ponderation": 0.2
+      },
+      {
+        "name": "SimulateSudoAbuseCapability",
+        "ponderation": 0.2
+      }
+    ],
+    "_comment": "This capability is related to the creation of lures, which are deceptive systems and artifacts intended to serve as decoys, breadcrumbs, or bait to elicit a specific response from the adversary. The capabilities listed here are related to the creation and manipulation of files and user accounts, which can be used to create lures that appear to be valuable targets for the adversary."
+  },
+  "EAC0006": {
+    "name": "Application Diversity",
+    "summary": "Present the adversary with a variety of installed applications and services.",
+    "capabilities": [
+      {
+        "name": "InjectFakeApplicationCapability",
+        "ponderation": 0.7
+      }
+    ],
+    "_comment": "Adds a believable additional service (matching package + process) to widen the perceived attack surface in response to discovery techniques, rather than relying solely on the static base image configuration."
+  },
+  "EAC0007": {
+    "name": "Network Diversity",
+    "summary": "Use a diverse set of devices on the network to help establish the legitimacy of a deceptive network.",
+    "capabilities": [
+      {
+        "name": "InjectFakeNetworkDeviceCapability",
+        "ponderation": 0.7
+      }
+    ],
+    "_comment": "Adds a believable additional network interface (e.g. a container bridge or management NIC), visible via ip addr/ip link, to widen the perceived network attack surface in response to network discovery techniques."
+  },
+  "EAC0008": {
+    "name": "Burn in",
+    "summary": "Exercise a target system in a manner where it will generate desirable system artifacts.",
+    "capabilities": [
+      {
+        "name": "GenerateTemporalFilesCapability",
+        "ponderation": 0.7
+      },
+      {
+        "name": "CreateLogFileCapability",
+        "ponderation": 0.6
+      },
+      {
+        "name": "CreateFileCapability",
+        "ponderation": 0.2
+      }
+    ],
+    "_comment": "Altough this activity is more related to base configuration and post analysis, it also involves the creation of deceptive artifacts."
+  },
+  "EAC0009": {
+    "name": "Email Manipulation",
+    "summary": "Modify the flow of email in the environment.",
+    "capabilities": [
+      {
+        "name": "InjectFakeApplicationCapability",
+        "ponderation": 0.3
+      }
+    ],
+    "_comment": "This honeypot has no real mail transport, so the flow of email itself can't be manipulated; the closest honest observable is a mail transport agent (postfix/dovecot) being installed and listening, which is what an attacker would actually check for (dpkg -l / ss -tuln) rather than SMTP traffic itself."
+  },
+  "EAC0010": {
+    "name": "Peripheral Management",
+    "summary": "Manage peripheral devices used on systems within the network for engagement purposes.",
+    "capabilities": [
+      {
+        "name": "InjectFakeNetworkConnectionCapability",
+        "ponderation": 0.6
+      }
+    ],
+    "_comment": "This activity involves managing peripheral devices like USB drives, disks, cameras and microphones. This honeypot currently only has support to add fake network connections."
+  },
+  "EAC0011": {
+    "name": "Pocket Litter",
+    "summary": "Data used to support the engagement narrative.",
+    "capabilities": [
+      {
+        "name": "GenerateUserDotFilesCapability",
+        "ponderation": 0.8
+      },
+      {
+        "name": "GenerateTemporalFilesCapability",
+        "ponderation": 0.6
+      },
+      {
+        "name": "CreateLogFileCapability",
+        "ponderation": 0.6
+      },
+      {
+        "name": "CreateFakeAWSCredentialsCapability",
+        "ponderation": 0.2
+      },
+      {
+        "name": "CreateFileCapability",
+        "ponderation": 0.2
+      }
+    ],
+    "_comment": "This activity involves the creation on fake artifacts that supports the engagement narrative, trying to increase the credibility of the system."
+  },
+  "EAC0012": {
+    "name": "Personas",
+    "summary": "Create fictitious human user(s) through a combination of planted data and revealed behavior patterns.",
+    "capabilities": [
+      {
+        "name": "GenerateUserDotFilesCapability",
+        "ponderation": 0.4
+      },
+      {
+        "name": "CreateFakeAWSCredentialsCapability",
+        "ponderation": 0.2
+      }
+    ],
+    "_comment": "This activity involves the creation of fictitious users with their own story and behavior, right now, this honeypot does not simulate active users, but it can generate fake user accounts and dotfiles for them."
+  },
+  "EAC0013": {
+    "name": "Malware Detonation",
+    "summary": "Execute malware under controlled conditions to analyze its functionality.",
+    "capabilities": [
+      {
+        "name": "SimulateMalwareDetonationCapability",
+        "ponderation": 0.5
+      }
+    ],
+    "_comment": "This honeypot never executes attacker-supplied content for real (unsafe for a live-facing service). Instead this capability simulates the observable side effects of a dropped payload running -- a process appearing, a log entry -- typically chained after an ingress tool transfer capability."
+  },
+  "EAC0014": {
+    "name": "Software Manipulation",
+    "summary": "Make changes to a system's software properties and functions to achieve a desired effect.",
+    "capabilities": [
+      {
+        "name": "ManipulateCommandOutputCapability",
+        "ponderation": 0.9
+      },
+      {
+        "name": "WeakenPasswordPolicyCapability",
+        "ponderation": 0.8
+      },
+      {
+        "name": "InjectFakeProcessCapability",
+        "ponderation": 0.3
+      },
+      {
+        "name": "InjectFakeNetworkConnectionCapability",
+        "ponderation": 0.3
+      }
+    ],
+    "_comment": "This activity involves the manipulation of software outputs and password policies among other things."
+  },
+  "EAC0015": {
+    "name": "Information Manipulation",
+    "summary": "Conceal and reveal both facts and fictions to support a deception story",
+    "capabilities": [
+      {
+        "name": "AddEnviromentVariableCapability",
+        "ponderation": 0.3
+      }
+    ],
+    "_comment": "This activity focus on the credibility of revealed facts and fictions, the capabilities are mostly in progress"
+  },
+  "EAC0016": {
+    "name": "Network Manipulation",
+    "summary": "Make changes to network properties and functions to achieve a desired effect.",
+    "capabilities": [
+      {
+        "name": "InjectFakeNetworkConnectionCapability",
+        "ponderation": 0.2
+      }
+    ],
+    "_comment": "This activity involves the manipulation of network, mostly by blocking or throttling connections to frustrate the attacker's plans. The ability to download files from remote servers is still not implemented."
+  },
+  "EAC0017": {
+    "name": "Hardware Manipulation",
+    "summary": "Alter the hardware configuration of a system to limit what an adversary can do with the device.",
+    "capabilities": [],
+    "_comment": "Reviewed against the 'is this observable from an SSH session' criterion (2026): since this honeypot is a virtual machine, real hardware manipulation has no equivalent an attacker could notice from a shell (lsusb/lscpu output changing mid-session would look more suspicious than convincing), so this stays intentionally passive rather than forcing an unconvincing observable."
+  },
+  "EAC0018": {
+    "name": "Security Controls",
+    "summary": "Alter security controls to make the system more or less vulnerable to attack.",
+    "capabilities": [
+      {
+        "name": "WeakenPasswordPolicyCapability",
+        "ponderation": 0.6
+      },
+      {
+        "name": "SimulateFirewallActivityCapability",
+        "ponderation": 0.4
+      }
+    ],
+    "_comment": "This activity states the importance of choosing wich security measures to implement and wich ones to avoid in order to encourage the atacker to engage in the honeypot but not making it too obvious."
+  },
+  "EAC0019": {
+    "name": "Baseline",
+    "summary": "Identify key system elements to establish a baseline and be prepared to reset a system to that baseline when necessary.",
+    "capabilities": [
+      {
+        "name": "ResetToBaselineCapability",
+        "ponderation": 0.3
+      }
+    ],
+    "_comment": "A new VFS/shell is generated per session, but within a long session the defender may still want to walk back specific injected decoys (fake processes/connections/packages/interfaces) mid-engagement without disconnecting the attacker; this capability does that in place."
+  },
+  "EAC0020": {
+    "name": "Isolation",
+    "summary": "Configure devices, systems, networks, etc. to contain activity and data, thus preventing the expansion of an engagement beyond desired limits.",
+    "capabilities": [
+      {
+        "name": "InjectRestrictiveFirewallRulesCapability",
+        "ponderation": 1.0
+      }
+    ],
+    "_comment": "Made observable (2026): while the honeypot's own isolation is a deployment property it must not advertise, a SEGMENTED production host plausibly carries egress/lateral-movement DENY rules a real admin would set. InjectRestrictiveFirewallRulesCapability plants those rules (visible via `ufw status`), containing the engagement in-story rather than by admitting containment."
+  },
+  "EAC0021": {
+    "name": "Attack Vector Migration",
+    "summary": "Move a malicious link, file, or device from its intended location to an engagement system or network for execution/use.",
+    "capabilities": [
+      {
+        "name": "SimulateFileQuarantineCapability",
+        "ponderation": 1.0
+      }
+    ],
+    "_comment": "Made observable (2026): the in-session analogue of relocating a malicious artifact to an engagement system is an endpoint agent quarantining a file the attacker just staged. SimulateFileQuarantineCapability moves an existing attacker-created path into a plausible EDR quarantine store, forcing the attacker to react and reading as a live, watched host."
+  },
+  "EAC0022": {
+    "name": "Artifact Diversity",
+    "summary": "Present the adversary with a variety of network and system artifacts.",
+    "capabilities": [
+      {
+        "name": "CreateFakeAWSCredentialsCapability",
+        "ponderation": 0.8
+      },
+      {
+        "name": "CreateFakeUserAccountCapability",
+        "ponderation": 0.3
+      },
+      {
+        "name": "InjectFakeNetworkConnectionCapability",
+        "ponderation": 0.3
+      },
+      {
+        "name": "InjectFakeProcessCapability",
+        "ponderation": 0.25
+      },
+      {
+        "name": "GenerateTemporalFilesCapability",
+        "ponderation": 0.2
+      }
+    ],
+    "_comment": "This activity consist of presenting the adversary with a variety of network and system artifacts such as accounts, credentials, processes and files, encouraging the attacker to engage with the honeypot and helping to identify their tactics, techniques and objectives."
+  },
+  "EAC0023": {
+    "name": "Introduced Vulnerabilities",
+    "summary": "Intentionally introduce vulnerabilities into the environment for the adversary to exploit.",
+    "capabilities": [
+      {
+        "name": "WeakenPasswordPolicyCapability",
+        "ponderation": 0.4
+      },
+      {
+        "name": "IntroduceVulnerablePackageCapability",
+        "ponderation": 0.6
+      }
+    ],
+    "_comment": "This activity consists of intentionally introducing vulnerabilities to encourage the adversary to engage with the honeypot or specific parts of it. IntroduceVulnerablePackageCapability plants a package with a known-outdated version, steering the attacker toward a specific, observable target."
+  }
+}

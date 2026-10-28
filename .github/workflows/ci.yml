@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  verify-datasets:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+
+    - name: Python setup
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Verify pinned MITRE ATT&CK / Engage datasets
+      run: python scripts/verify_datasets.py
+
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+
+    - name: Python setup
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: "pip"
+
+    - name: Install ruff
+      run: pip install ruff
+
+    - name: Run ruff check
+      run: ruff check src orchestrator tests scripts
+
+
+  typecheck:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+
+    - name: Python setup
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: "pip"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mypy
+        pip install -r requirements.txt
+
+    - name: Run mypy
+      run: mypy
+
+  test:
+    runs-on: ubuntu-22.04
+    needs: [lint, typecheck]
+
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v4
+
+    - name: Python setup
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: "pip"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-mock pytest-cov
+        pip install -r requirements.txt
+
+    - name: Run Pytest with coverage
+      env:
+        OPENAI_API_KEY: "dummy-key-for-ci-tests"
+      run: |
+        python -m pytest tests/ -v --cov --cov-report=term-missing --cov-report=xml
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage.xml

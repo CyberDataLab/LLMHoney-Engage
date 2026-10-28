@@ -1,0 +1,2 @@
+class PipeProtocol:
+  pass

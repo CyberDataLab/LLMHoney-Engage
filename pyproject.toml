@@ -1,0 +1,64 @@
+[project]
+name = "llmhoney-engage"
+version = "1.0.0"
+description = "LLM-driven SSH honeypot with narrative deception built on MITRE Engage, and an autonomous LLM attacker to evaluate it"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 120
+indent-width = 2
+target-version = "py311"
+exclude = [
+  "src/honeyengage/virtual_env/cowrie",
+  "src/honeyengage/virtual_env/commands",
+  "src/llmattacker/atomics",
+]
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "I",
+  "UP",
+  "B",
+  "SIM",
+  "C4",
+]
+ignore = [
+  "E501",
+]
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+
+[tool.mypy]
+packages = ["src"]
+namespace_packages = true
+explicit_package_bases = true
+ignore_missing_imports = true
+disallow_untyped_defs = false
+warn_unused_ignores = true
+warn_redundant_casts = true
+exclude = [
+  "src/honeyengage/virtual_env/cowrie",
+  "src/honeyengage/virtual_env/commands",
+  "src/llmattacker/atomics",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+filterwarnings = [
+  "ignore::sklearn.exceptions.InconsistentVersionWarning",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+  "src/honeyengage/virtual_env/cowrie/*",
+  "src/honeyengage/virtual_env/commands/*",
+]
+
+[tool.coverage.report]
+skip_empty = true
+precision = 1
