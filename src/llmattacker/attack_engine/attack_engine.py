@@ -52,7 +52,7 @@ class AttackEngine:
         random.seed(int(seed_val))
 
     self.profile = pick_threat_actor_profile(
-      session_id=os.getenv("LLMATTACKER_PROFILE_SEED_KEY") or os.getenv("SESSION_ID", "default_session"),
+      session_id=str(os.getenv("LLMATTACKER_PROFILE_SEED_KEY") or os.getenv("SESSION_ID", "default_session")),
       forced_profile_id=os.getenv("LLMATTACKER_PROFILE"),
       base_seed=seed_val,
     )
@@ -188,14 +188,11 @@ class AttackEngine:
       streak += 2.0 if family == previous_family else 1.0
       previous_family = family
 
-    REWARDING_NOVELTY_STEP = 4
-    PER_CLASS_BONUS = 1
     CORROBORATION_STEP = 3
     MAX_EARNED_BONUS = 12
     distinct_classes: set[str] = set()
     for outcome in history:
       distinct_classes |= outcome.new_artifact_classes
-    accumulated_novelty = sum(outcome.new_notable_tokens for outcome in history)
     breadth = len(distinct_classes)
     reactive_rounds = sum(1 for outcome in history if outcome.new_artifact_classes)
     productive_rounds = sum(
@@ -682,8 +679,7 @@ class AttackEngine:
     "disabled", "exited", "dead", "since", "main", "tasks", "memory",
     "cgroup", "sub", "default", "exists", "created_at", "table", "update",
     "pathtoatomicsfolder",
-    "unknown", "executable", "could", "be", "found",
-    "doctype", "html", "head", "body", "title", "meta",
+    "unknown", "executable", "could", "be", "doctype", "html", "head", "body", "title", "meta",
     "statistics", "transmitted", "received", "packets", "packet", "loss",
     "rtt", "min", "avg", "max", "mdev", "/avg/max/mdev", "icmp_seq", "ttl",
     "bytes", "adding",
@@ -697,7 +693,7 @@ class AttackEngine:
     "/root/.bashrc", "/root/.profile",
     "skipping", "machine",
     "established",
-    "out", "copied", "bytes", "records",
+    "out", "copied", "records",
     "days", "average", "x86_64", "gnu", "6.8.0-49-generic", "ubuntu",
     "smp", "linux", "load", "/linux", "49-ubuntu", "groups", "jcpu",
     "pcpu", "0.00s", "1.00s", "0.02s",

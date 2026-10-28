@@ -15,9 +15,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 
-from src.common.timing import measure
 from loguru import logger
 
+from src.common.timing import measure
 from src.honeyengage.engage_engine.capabilities.utils import Capability, CapabilityResult
 from src.honeyengage.engage_engine.engage_mapping import EngageDetails, EngageResult, EngageStepResult
 from src.honeyengage.engage_engine.engage_parser import EngageParser
@@ -152,10 +152,12 @@ class EngageEngine:
     if self.coa_mode == "single":
       chain = [valid_capabilities[session_rng.randrange(len(valid_capabilities))]]
     elif self.coa_mode == "same_ttp":
-      activity = self._same_ttp_activity.get(session_id)
-      if activity is None:
+      cached_activity = self._same_ttp_activity.get(session_id)
+      if cached_activity is None:
         activity = activity_ids[session_rng.randrange(len(activity_ids))]
         self._same_ttp_activity[session_id] = activity
+      else:
+        activity = cached_activity
       caps_for_activity = [(activity, cap) for cap in self.activity_capabilities_mapping.get(activity, [])]
       if not caps_for_activity:
         caps_for_activity = valid_capabilities
@@ -215,7 +217,7 @@ class EngageEngine:
         precomputed_options_list = list(executor.map(fetch_options, chain))
 
     steps: list[EngageStepResult] = []
-    for (eac_id, capability_name), precomputed_options in zip(chain, precomputed_options_list):
+    for (eac_id, capability_name), precomputed_options in zip(chain, precomputed_options_list, strict=True):
       steps.append(self.execute_deception(
         session_id, eac_id, capability_name, command, description, vfs, virtual_shell,
         precomputed_options=precomputed_options,
@@ -398,7 +400,7 @@ class EngageEngine:
     if self.enable_metrics:
       planted_values: list[str] = []
       try:
-        for field, value in vars(capability_options).items():
+        for value in vars(capability_options).values():
           if isinstance(value, str):
             planted_values.append(value)
           elif isinstance(value, dict):
@@ -497,7 +499,7 @@ class EngageEngine:
       "4. Return ONE JSON object whose keys are EXACTLY the component names given.\n"
       "5. When a field is described as \"Dictionary\", output EXACTLY ONE JSON object for it."
     )
-    subject = self._narrative_subject(session_id, narrative)
+    subject = self._narrative_subject(str(session_id), narrative)
 
     user_prompt = (
       f"Command executed: {command}\n"

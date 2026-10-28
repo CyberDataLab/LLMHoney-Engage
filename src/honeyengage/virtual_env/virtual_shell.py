@@ -893,7 +893,7 @@ class VirtualShell:
       if self.vfs.get_node(target) is None:
         return f"crontab: {file_args[0]}: No such file or directory\r\n"
       return ""
-    return f"crontab: usage error: file name must be specified for replace\r\n"
+    return "crontab: usage error: file name must be specified for replace\r\n"
 
 
   def do_cd(self, args: list):

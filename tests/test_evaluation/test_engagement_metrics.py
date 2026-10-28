@@ -7,8 +7,8 @@ import pytest
 
 from src.evaluation.engagement_metrics import compute_engagement_metrics
 from src.evaluation.session_evaluator import SessionEvaluator
-from src.llmattacker.deception_engine.credibility_analyzer import CredibilityAnalyzer
 from src.honeyengage.telemetry.models import Session
+from src.llmattacker.deception_engine.credibility_analyzer import CredibilityAnalyzer
 
 
 def make_llm_response(content):

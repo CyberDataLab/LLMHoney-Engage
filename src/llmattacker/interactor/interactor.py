@@ -4,7 +4,6 @@ import re
 import time
 
 import paramiko
-from src.common.timing import measure
 from loguru import logger
 
 _PROMPT_TAIL_RE = re.compile(r"@ubuntu:[^\r\n]*[#$] $")

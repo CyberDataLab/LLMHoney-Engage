@@ -138,7 +138,7 @@ class SessionTracker:
       return "Too few completed commands yet to characterize pace or pattern."
 
     timestamps = [i.timestamp for i in completed]
-    gaps = [(t2 - t1).total_seconds() for t1, t2 in zip(timestamps, timestamps[1:])]
+    gaps = [(t2 - t1).total_seconds() for t1, t2 in zip(timestamps, timestamps[1:], strict=False)]
     avg_gap = sum(gaps) / len(gaps) if gaps else 0.0
     if avg_gap < 2:
       pace = "very fast (near-automated, little apparent deliberation between commands)"
@@ -173,7 +173,8 @@ class SessionTracker:
       backspaces=backspaces,
       response=None,
       mitre_mapping=None,
-      engage_details=None
+      engage_details=None,
+      response_latency_seconds=None,
     )
 
     self.interactions.append(interaction)

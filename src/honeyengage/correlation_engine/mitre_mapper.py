@@ -7,9 +7,9 @@ import re
 from pathlib import Path
 
 from dotenv import load_dotenv
-from src.common.timing import measure
 from loguru import logger
 
+from src.common.timing import measure
 from src.honeyengage.telemetry.models import InteractionInfo, MitreMapping, MitreMappingError
 
 MAX_INTERACTION_CONTEXT = 5

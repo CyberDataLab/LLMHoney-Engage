@@ -4,9 +4,10 @@ import json
 import os
 import re
 
-from src.common.timing import measure
 from loguru import logger
 from openai import OpenAI
+
+from src.common.timing import measure
 
 logger.add("logs/credibility_analyzer.log", rotation="1 MB")
 

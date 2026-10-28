@@ -6,8 +6,8 @@ from pathlib import Path
 from loguru import logger
 
 from src.evaluation.models import CommandVerdict, SessionVerdict
-from src.llmattacker.deception_engine.credibility_analyzer import CredibilityAnalyzer
 from src.honeyengage.telemetry.models import Session
+from src.llmattacker.deception_engine.credibility_analyzer import CredibilityAnalyzer
 
 logger.add("logs/session_evaluator.log", rotation="1 MB")
 

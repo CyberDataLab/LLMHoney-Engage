@@ -5,10 +5,8 @@ import socket
 import subprocess
 import sys
 import time
-from datetime import datetime
 
 from loguru import logger
-
 
 logger.add("logs/orchestrator.log")
 
